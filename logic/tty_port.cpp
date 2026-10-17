@@ -11,11 +11,13 @@
 
 TtyPort::TtyPort()
     : m_fd(-1)
+    , m_ifNamePort("")
 {
 }
 
 TtyPort::TtyPort(const std::string &_path)
     : m_fd(-1)
+    , m_ifNamePort(_path)
 {
     Open(_path);
 }
@@ -74,7 +76,7 @@ int TtyPort::Read(char *_data, size_t _size, int _timeOut)
 {
     if (!IsOpen())
     {
-        return 0;
+        return -1;
     }
 
     struct pollfd fd; 
@@ -119,12 +121,71 @@ int TtyPort::Read(char *_data, size_t _size, int _timeOut)
     return 0;
 }
 
-bool TtyPort::Write(std::string_view _data)
+bool TtyPort::Write(std::string_view _data, std::string &_errorDescription)
 {
-    return false;
+    if (!IsOpen())
+    {
+        return false;
+    }
+
+    _errorDescription.clear();
+    // TODO написать errorDescription
+
+    size_t total = 0;
+    while (total < _data.size())
+    {
+        ssize_t res = ::write(m_fd, _data.data() + total, _data.size() - total);
+        if (res < 0)
+        {
+            if (errno == EINTR)
+            {
+                continue;
+            }
+
+            // переполнение буфера
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+            {
+                struct pollfd fd;
+                fd.fd = m_fd;
+                fd.events = POLLOUT;
+
+                int ret = ::poll(&fd, 1, 100);
+                
+                // что то пошло не так
+                if (ret < 0 && errno == EINTR) 
+                {
+                    continue;
+                }
+
+                if (ret > 0 && (fd.revents & POLLOUT)) // осовобилось, продолжаем
+                {
+                    continue;
+                }
+
+                return false; // что то пошло не так
+            }
+
+            return false; // что то пошло нетак
+        }
+
+        // на всякий случай
+        if (res == 0)
+        {
+            continue;
+        }
+
+        total += static_cast<size_t>(res);
+    }
+
+    return true;
 }
 
 bool TtyPort::IsOpen() const
 {
     return m_fd != -1;
+}
+
+std::string TtyPort::GetPortName() const
+{
+    return m_ifNamePort;
 }

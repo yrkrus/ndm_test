@@ -24,9 +24,13 @@ int main(int argc, char *argv[])
     TtyPort port(config::cTTYPath);
     if (!port.IsOpen()) 
     {
-        Logger::Instance().ToConsole(StringFormat("Port opening '%s' error ", config::cTTYPath.c_str()));
+        Logger::Instance().ToConsole(StringFormat("port opening '%s' error ", config::cTTYPath.c_str()));
         return 1;
     }
+
+    ATServer server(port);
+    server.Start();
+
 
     std::cout << "hello\n";
     return 0;

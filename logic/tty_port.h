@@ -6,7 +6,8 @@
 class TtyPort
 {
  private:
-    int m_fd;
+    int           m_fd;
+    std::string   m_ifNamePort;
 
  public:  
     TtyPort();
@@ -20,9 +21,11 @@ class TtyPort
     void Close();
 
     int Read(char *_data, size_t _size, int _timeOut = 1000);
-    bool Write(std::string_view _data);
+    bool Write(std::string_view _data, std::string &_errorDescription);
 
     bool IsOpen() const;
+   std::string GetPortName() const;
+    
 };
 
 #endif // TTY_PORT_H
