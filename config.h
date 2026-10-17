@@ -6,7 +6,7 @@
 namespace config 
 {
     static const std::string cLogFileName = "log.log";
-    static const std::string cTTYPath  = "/dev/pts/32";
+    static const std::string cTTYPath  = "/dev/pts/3";
     constexpr const char cMinCommand = 3;
 }
 

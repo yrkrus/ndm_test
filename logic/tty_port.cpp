@@ -63,7 +63,7 @@ bool TtyPort::Open(const std::string &_path)
 
 void TtyPort::Close()
 {
-    if (m_fd >= 0)
+    if (IsOpen())
     {
         ::close(m_fd);
         m_fd = -1;
@@ -72,6 +72,50 @@ void TtyPort::Close()
 
 int TtyPort::Read(char *_data, size_t _size, int _timeOut)
 {
+    if (!IsOpen())
+    {
+        return 0;
+    }
+
+    struct pollfd fd; 
+    fd.fd = m_fd;
+    fd.events = POLLIN;
+
+    int ret = ::poll(&fd, 1, _timeOut);
+    if (ret < 0)
+    {
+        if (errno == EINTR)
+        {
+            return 0;
+        }
+        return -1;
+    }
+    else if (ret == 0)  // таймаут
+    {
+        return 0;
+    }
+
+    if (fd.revents & POLLIN) 
+    {
+        ssize_t bytes = ::read(m_fd, _data, _size);
+        
+        if (bytes < 0) 
+        {
+            if (errno == EINTR)
+            {
+                return 0;
+            }
+            return -1;
+        }
+        return static_cast<int>(bytes);
+    }
+
+    // что то пошло не так
+    if (fd.revents & (POLLERR | POLLHUP | POLLNVAL))
+    {
+        return -1;
+    }
+
     return 0;
 }
 
