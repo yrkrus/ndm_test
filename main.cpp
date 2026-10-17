@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     // }
     
    
-    TtyPort port(config::cTTYPath);
+    TtyPort port(config::cTTYPath, BaudRate::ecRate115200);
     if (!port.IsOpen()) 
     {
         Logger::Instance().ToConsole(StringFormat("port opening '%s' error ", config::cTTYPath.c_str()));

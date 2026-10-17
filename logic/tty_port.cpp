@@ -9,11 +9,12 @@
 #include <cstring>
 #include <cerrno>
 
-TtyPort::TtyPort(const std::string &_path)
+TtyPort::TtyPort(const std::string &_path, BaudRate _speed)
     : m_fd(-1)
     , m_ifNamePort(_path)
+    , m_speed(_speed)
 {
-    Open(_path);
+    Open(_path, m_speed);
 }
 
 TtyPort::~TtyPort()
@@ -21,14 +22,21 @@ TtyPort::~TtyPort()
     Close();
 }
 
-bool TtyPort::Open(const std::string &_path)
+bool TtyPort::Open(const std::string &_path, BaudRate _speed)
 {
+    if (IsOpen()) 
+    {
+        Close();
+    }
+    
     m_fd = ::open(_path.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (m_fd < 0)
     {
         Logger::Instance().ToConsole(StringFormat("%s : %s", __METHOD_NAME__, strerror(errno)));
         return false;
     }
+    m_ifNamePort = _path;
+    m_speed = _speed;
 
     struct termios tty;
     if (tcgetattr(m_fd, &tty) != 0)
@@ -44,6 +52,11 @@ bool TtyPort::Open(const std::string &_path)
     tty.c_cflag |= CLOCAL | CREAD;
     tty.c_cc[VMIN] = 0;
     tty.c_cc[VTIME] = 0;
+    // скорость
+
+    speed_t speed = ToSpeed(_speed);
+    cfsetispeed(&tty, speed);
+    cfsetospeed(&tty, speed);
 
     // записываем
     if (tcsetattr(m_fd, TCSANOW, &tty) != 0)
