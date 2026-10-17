@@ -21,7 +21,8 @@ void ATServer::Start()
 
     while (m_running)
     {
-        int ret = m_port.Read(buff, sizeof(buff), config::cTimeOutAtServerReadData);
+        std::string errorDescription;
+        int ret = m_port.Read(buff, sizeof(buff), config::cTimeOutAtServerReadData, errorDescription);
         if (ret > 0)
         {
             m_buffer.append(buff, ret);
@@ -42,8 +43,10 @@ void ATServer::Start()
         else if (ret < 0)
         {
             m_running = false;
-            Logger::Instance().ToConsole(StringFormat("%s : server stopped on port %s", 
-                                                        __METHOD_NAME__, m_port.GetPortName().c_str()));
+            Logger::Instance().ToConsole(StringFormat("%s : server stopped on port %s error %s", 
+                                                        __METHOD_NAME__, 
+                                                        m_port.GetPortName().c_str(),
+                                                        errorDescription.c_str()));
         }
     }
 }

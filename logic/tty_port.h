@@ -20,7 +20,7 @@ class TtyPort
     bool Open(const std::string &_path);
     void Close();
 
-    int Read(char *_data, size_t _size, int _timeOut = 1000);
+    int Read(char *_data, size_t _size, int _timeOut, std::string &_errorDescription);
     bool Write(std::string_view _data, std::string &_errorDescription);
 
     bool IsOpen() const;

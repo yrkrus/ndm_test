@@ -72,8 +72,11 @@ void TtyPort::Close()
     }
 }
 
-int TtyPort::Read(char *_data, size_t _size, int _timeOut)
+int TtyPort::Read(char *_data, size_t _size, int _timeOut, std::string &_errorDescription)
 {
+    _errorDescription.clear();
+    // TODO _errorDescription
+
     if (!IsOpen())
     {
         return -1;

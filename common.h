@@ -6,7 +6,7 @@
 
 std::string DateTimeNow();
 std::string ShowCommandHelp();
-const std::string StringFormat(const char *format, ...);
+std::string StringFormat(const char *format, ...);
 std::string MethodName(const std::string &_prettyFunction);
 
 

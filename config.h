@@ -6,11 +6,12 @@
 
 namespace config 
 {
-    static const std::string cLogFileName = "log.log";
-    static const std::string cTTYPath  = "/dev/pts/3";
-    constexpr const char cMinCommand = 3;
-    constexpr const uint8_t cTimeOutAtServerReadData = 200;
-    inline constexpr std::string_view cCRLF = "\r\n";
+    static const std::string cLogFileName               = "log.log";
+    constexpr const uint16_t cMaxBuffStringFormat       = 1024;
+    static const std::string cTTYPath                   = "/dev/pts/3";
+    constexpr const char cMinCommand                    = 3;
+    constexpr const uint8_t cTimeOutAtServerReadData    = 200;
+    inline constexpr std::string_view cCRLF             = "\r\n";
 }
 
 #endif // CONFIG_H

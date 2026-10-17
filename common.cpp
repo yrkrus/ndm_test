@@ -1,4 +1,5 @@
 #include "common.h"
+#include "config.h"
 #include <chrono>
 #include <ctime>
 #include <cstdio>
@@ -31,9 +32,9 @@ std::string ShowCommandHelp()
     return std::string();
 }
 
-const std::string StringFormat(const char* format, ...)
+std::string StringFormat(const char* format, ...)
 {
-    char buffer[1024] = {};
+    char buffer[config::cMaxBuffStringFormat] = {};
     va_list ap;
 
     va_start(ap, format);
