@@ -5,27 +5,25 @@
 
 class TtyPort
 {
- private:
-    int           m_fd;
-    std::string   m_ifNamePort;
+private:
+   int m_fd;
+   std::string m_ifNamePort;
 
- public:  
-    TtyPort();
-    TtyPort(const std::string &_path);
-    ~TtyPort();
+public:
+   explicit TtyPort(const std::string &_path);
+   ~TtyPort();
 
-    TtyPort(const TtyPort&) = delete;
-    TtyPort& operator=(const TtyPort&) = delete;
+   TtyPort(const TtyPort &) = delete;
+   TtyPort &operator=(const TtyPort &) = delete;
 
-    bool Open(const std::string &_path);
-    void Close();
+   bool Open(const std::string &_path);
+   void Close();
 
-    int Read(char *_data, size_t _size, int _timeOut, std::string &_errorDescription);
-    bool Write(std::string_view _data, std::string &_errorDescription);
+   int Read(char *_data, size_t _size, int _timeOut, std::string &_errorDescription);
+   bool Write(std::string_view _data, std::string &_errorDescription);
 
-    bool IsOpen() const;
+   bool IsOpen() const;
    std::string GetPortName() const;
-    
 };
 
 #endif // TTY_PORT_H

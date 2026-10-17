@@ -13,7 +13,7 @@ private:
     void ExecuteCommand(const std::string &_str);    
 
 public:
-    ATServer(TtyPort &_port);
+    explicit ATServer(TtyPort &_port);
 
     void Start();
     void Stop();

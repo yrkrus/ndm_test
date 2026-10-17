@@ -9,12 +9,6 @@
 #include <cstring>
 #include <cerrno>
 
-TtyPort::TtyPort()
-    : m_fd(-1)
-    , m_ifNamePort("")
-{
-}
-
 TtyPort::TtyPort(const std::string &_path)
     : m_fd(-1)
     , m_ifNamePort(_path)

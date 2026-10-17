@@ -29,12 +29,12 @@ Logger &Logger::Instance()
     return log;
 }
 
-void Logger::ToConsole(std::string_view _str, bool _toFile)
+void Logger::ToConsole(std::string_view _str, LogTarget _target)
 {
     std::string timeStamp = DateTimeNow();
     std::cout << timeStamp << " : " << _str << "\n";
 
-    if (_toFile)
+    if (_target == LogTarget::ecConsoleAndFile)
     {
         ToFile(_str, timeStamp);
     }
