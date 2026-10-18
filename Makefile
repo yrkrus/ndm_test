@@ -9,7 +9,6 @@ OBJS     := $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-# Теперь $(LDLIBS) передается линковщику в конце команды
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDLIBS)
 
 %.o: %.cpp

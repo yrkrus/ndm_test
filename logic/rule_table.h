@@ -27,6 +27,7 @@ public:
     ~RuleTable() = default;
 
     bool LoadFileRule(const std::string &_pathRule, std::string &_errorDescription);
+    void Show();
 };
 
 #endif // RULE_TABLE_H
