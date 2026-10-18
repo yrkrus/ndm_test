@@ -14,7 +14,7 @@ TtyPort::TtyPort(const std::string &_path, BaudRate _speed)
     , m_ifNamePort(_path)
     , m_speed(_speed)
 {
-    Open(_path, m_speed);
+    Open(_path, _speed);
 }
 
 TtyPort::~TtyPort()
@@ -24,10 +24,7 @@ TtyPort::~TtyPort()
 
 bool TtyPort::Open(const std::string &_path, BaudRate _speed)
 {
-    if (IsOpen()) 
-    {
-        Close();
-    }
+    Close();    // без IsOpen() внутри проверит сам 
     
     m_fd = ::open(_path.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (m_fd < 0)
@@ -52,8 +49,8 @@ bool TtyPort::Open(const std::string &_path, BaudRate _speed)
     tty.c_cflag |= CLOCAL | CREAD;
     tty.c_cc[VMIN] = 0;
     tty.c_cc[VTIME] = 0;
+    
     // скорость
-
     speed_t speed = ToSpeed(_speed);
     cfsetispeed(&tty, speed);
     cfsetospeed(&tty, speed);
@@ -82,10 +79,9 @@ void TtyPort::Close()
 int TtyPort::Read(char *_data, size_t _size, int _timeOut, std::string &_errorDescription)
 {
     _errorDescription.clear();
-    // TODO _errorDescription
-
     if (!IsOpen())
     {
+        _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, "port not opened");
         return -1;
     }
 
@@ -98,12 +94,15 @@ int TtyPort::Read(char *_data, size_t _size, int _timeOut, std::string &_errorDe
     {
         if (errno == EINTR)
         {
+            _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
             return 0;
         }
+        _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
         return -1;
     }
     else if (ret == 0)  // таймаут
     {
+        _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
         return 0;
     }
 
@@ -115,8 +114,10 @@ int TtyPort::Read(char *_data, size_t _size, int _timeOut, std::string &_errorDe
         {
             if (errno == EINTR)
             {
+                _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
                 return 0;
             }
+            _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
             return -1;
         }
         return static_cast<int>(bytes);
@@ -125,6 +126,7 @@ int TtyPort::Read(char *_data, size_t _size, int _timeOut, std::string &_errorDe
     // что то пошло не так
     if (fd.revents & (POLLERR | POLLHUP | POLLNVAL))
     {
+        _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
         return -1;
     }
 
@@ -135,12 +137,11 @@ bool TtyPort::Write(std::string_view _data, std::string &_errorDescription)
 {
     if (!IsOpen())
     {
+        _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, "port not opened");
         return false;
     }
 
     _errorDescription.clear();
-    // TODO написать errorDescription
-
     size_t total = 0;
     while (total < _data.size())
     {
@@ -172,9 +173,11 @@ bool TtyPort::Write(std::string_view _data, std::string &_errorDescription)
                     continue;
                 }
 
+                _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
                 return false; // что то пошло не так
             }
 
+            _errorDescription = StringFormat("%s : %s", __METHOD_NAME__, strerror(errno));
             return false; // что то пошло нетак
         }
 
