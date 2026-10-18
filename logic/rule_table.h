@@ -3,18 +3,24 @@
 
 #include <string>
 #include <vector>
-
+#include <string_view>
 
 struct EntryRule
 {
-    std::string expect;    // AT, ATE[1,0],  ATI, AT+COPS, AT+CPIN и т.д.
-    std::string answer;    // ответы 
+    std::string expect; // AT, ATE[1,0],  ATI, AT+COPS, AT+CPIN и т.д.
+    std::string answer; // ответы
+
+    bool isValid() const
+    {
+        return !expect.empty() && !answer.empty(); // считаем что пустой что то из
+    }
 };
 
 class RuleTable
 {
 private:
-    std::vector<EntryRule>  m_rules;   
+    std::vector<EntryRule>  m_rules;       
+    static bool ParseRuleEntry(std::string_view _str, EntryRule &_rule, std::string &_errorDescription);
 
 public:
     RuleTable() = default;

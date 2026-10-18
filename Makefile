@@ -1,5 +1,7 @@
 CXX      := g++
 CXXFLAGS := -g -Wall -std=c++17 -fdiagnostics-color=always -I. -Ilogic
+LDLIBS   := -lstdc++fs
+
 TARGET   := main
 SRCS     := $(wildcard *.cpp) $(wildcard logic/*.cpp)
 OBJS     := $(SRCS:.cpp=.o)
@@ -7,7 +9,8 @@ OBJS     := $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $@
+# Теперь $(LDLIBS) передается линковщику в конце команды
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDLIBS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

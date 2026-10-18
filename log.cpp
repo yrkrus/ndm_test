@@ -3,8 +3,6 @@
 #include "common.h"
 #include "config.h"
 
-// #define DATE_TIME __DATE__ " " __TIME__
-
 Logger::Logger(const std::string &_name)
     : m_name(_name)
 {
