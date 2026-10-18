@@ -63,7 +63,17 @@ void ATServer::ExecuteCommand(const std::string &_str)
 {
     Logger::Instance().ToConsole(StringFormat("RX: [%s]", _str.c_str()));
 
-    std::string response = StringFormat("OK%s", std::string(config::cCRLF).c_str());
+    std::string response = m_rule.FindAnswer(_str);
+    if (response.empty()) 
+    {
+        response = "ERROR";
+        response += config::cCRLF;
+        Logger::Instance().ToConsole("TX: [ERROR] (Rule not found)");
+    }
+    else 
+    {
+        Logger::Instance().ToConsole(StringFormat("TX: [%s]", response.c_str()));
+    }
     
     std::string errorDescription;
     if (!m_port.Write(response, errorDescription))

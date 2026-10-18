@@ -108,3 +108,22 @@ bool RuleTable::ParseRuleEntry(std::string_view _str, EntryRule &_rule, std::str
 
     return true;
 }
+
+std::string RuleTable::FindAnswer(std::string_view _command) const
+{
+    for (const auto &[exp, ans] : m_rules) 
+    {
+        if (Match(exp,_command)) 
+        {
+            return ans;
+        }
+    }
+
+    return "";
+}
+
+bool RuleTable::Match(const std::string &_expect, std::string_view _command) const
+{
+    // TODO
+    return false;
+}

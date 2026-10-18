@@ -28,6 +28,9 @@ public:
 
     bool LoadFileRule(const std::string &_pathRule, std::string &_errorDescription);
     void Show();
+
+    std::string FindAnswer(std::string_view _command) const;
+    bool Match(const std::string &_expect, std::string_view _command) const;
 };
 
 #endif // RULE_TABLE_H
