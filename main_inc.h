@@ -6,6 +6,6 @@
 #include "log.h"
 #include "logic/tty_port.h"
 #include "logic/at_server.h"
-#include "logic/rule.h"
+#include "logic/rule_table.h"
 
 #endif // MAIN_INC_H

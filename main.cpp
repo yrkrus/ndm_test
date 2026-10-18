@@ -20,7 +20,16 @@ int main(int argc, char *argv[])
     //     return 1;    
     // }
     
+    // load rule
+    std::string errorDesription;
+    RuleTable rule;
+    if(!rule.LoadFileRule(config::cRuleTableFile, errorDesription))  
+    {
+        Logger::Instance().ToConsole(StringFormat("main() : rule table error : %s", errorDesription.c_str()));
+        return 1;
+    }
    
+    // try open tty port
     TtyPort port(config::cTTYPath, BaudRate::ecRate115200);
     if (!port.IsOpen()) 
     {
@@ -28,10 +37,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    ATServer server(port);
+    // run server
+    ATServer server(rule, port);
     server.Start();
 
 
-    std::cout << "hello\n";
     return 0;
 }

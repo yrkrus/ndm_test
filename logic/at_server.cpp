@@ -6,8 +6,9 @@
 
 #define DATA_BUFF 256
 
-ATServer::ATServer(TtyPort &_port)
-    : m_port(_port)
+ATServer::ATServer(RuleTable &_rule, TtyPort &_port)
+    : m_rule(_rule) 
+    , m_port(_port)
     , m_running(false)
 {
 }
