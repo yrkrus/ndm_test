@@ -122,8 +122,32 @@ std::string RuleTable::FindAnswer(std::string_view _command) const
     return "";
 }
 
-bool RuleTable::Match(const std::string &_expect, std::string_view _command) const
+bool RuleTable::Match(std::string_view _pattern, std::string_view _command)
 {
-    // TODO
+    // закончили искать
+    if (_pattern.empty())
+    {
+        return _command.empty();
+    }
+
+    // вдруг **
+    if (_command.empty())
+    {
+        return _pattern.find_first_not_of('*') == std::string_view::npos;
+    }
+
+    // (*)
+    if (_pattern[0] == '*')
+    {
+        return Match(_pattern.substr(1), _command) || Match(_pattern, _command.substr(1));
+    }
+
+    //  (.) или точное совпадение
+    if (_pattern[0] == '.' || _pattern[0] == _command[0])
+    {
+        return Match(_pattern.substr(1), _command.substr(1));
+    }
+
+    // нет совпадений
     return false;
 }

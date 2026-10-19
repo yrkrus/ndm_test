@@ -28,6 +28,12 @@ int main(int argc, char *argv[])
         Logger::Instance().ToConsole(StringFormat("main() : rule table error : %s", errorDesription.c_str()));
         return 1;
     }
+
+   // if (rule.Match("A*T","ABT")) 
+   // {
+   //     std::cout << "OK";
+   //     return 0;    
+   // }
    
     // try open tty port
     TtyPort port(config::cTTYPath, BaudRate::ecRate115200);
