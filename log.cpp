@@ -9,7 +9,7 @@ Logger::Logger(const std::string &_name)
     m_file.open(config::cLogFileName, std::ios::app);
     if (!m_file.is_open())
     {
-        printf("Failed to open log file %s\n", config::cLogFileName.c_str());
+        printf("Failed to open log file %s\n", config::cLogFileName);
     }
 }
 

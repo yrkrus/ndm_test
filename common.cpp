@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <string>
 #include <cstdarg>
+#include <iostream>
 
 std::string DateTimeNow()
 {
@@ -27,9 +28,13 @@ std::string DateTimeNow()
     return res;
 }
 
-std::string ShowCommandHelp()
+void ShowCommandHelp(const char *_progname)
 {
-    return std::string();
+    std::cout << "Usage: " << _progname << " -t [tty_path] -p [port_speed] -r [rules_file]\n"
+              << "\nDefaults:\n"
+              << "  tty_path     : " << config::cTTYPath << "\n"
+              << "  port_speed   : " << EnumToInt(config::cDefaultSpeed) << "\n"
+              << "  rules_file   : " << config::cRuleTableFile << "\n\n";
 }
 
 std::string StringFormat(const char* format, ...)
@@ -59,4 +64,34 @@ std::string MethodName(const std::string &_prettyFunction)
     }
 
     return tempResult.substr(space + 1, tempResult.size() - space - 1) + cBraces;
+}
+
+bool IsValidNumber(const std::string &_str, int &_result)
+{
+    if (_str.empty())
+    {
+        return false;
+    }
+
+    try
+    {
+        size_t pos = 0;
+        int value = std::stoi(_str, &pos);
+
+        if (pos != _str.length())
+        {
+            return false;
+        }
+
+        _result = value;
+        return true;
+    }
+    catch (const std::invalid_argument &)
+    {
+        return false; // В строке вообще нет цифр (например, "hello")
+    }
+    catch (const std::out_of_range &)
+    {
+        return false; // Число слишком большое (например, "99999999999999999999")
+    }
 }

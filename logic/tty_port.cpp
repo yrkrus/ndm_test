@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cerrno>
 
-TtyPort::TtyPort(const std::string &_path, BaudRate _speed)
+TtyPort::TtyPort(const std::string &_path, ConnectionSpeed _speed)
     : m_fd(-1)
     , m_ifNamePort(_path)
     , m_speed(_speed)
@@ -22,7 +22,7 @@ TtyPort::~TtyPort()
     Close();
 }
 
-bool TtyPort::Open(const std::string &_path, BaudRate _speed)
+bool TtyPort::Open(const std::string &_path, ConnectionSpeed _speed)
 {
     Close();    // без IsOpen() внутри проверит сам 
     

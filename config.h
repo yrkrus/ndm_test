@@ -4,16 +4,18 @@
 #include <string>
 #include <string_view>
 #include <cstdint>
+#include "logic/tty_port.h"
 
 namespace config 
 {
-    inline const std::string cLogFileName               = "log.log";
+    inline constexpr const char *cLogFileName           = "log.log";
+    inline constexpr const char *cTTYPath               = "/dev/pts/37";
+    inline constexpr const char *cRuleTableFile         = "rules.txt";
+    const ConnectionSpeed cDefaultSpeed                 = ConnectionSpeed::ec115200;
     constexpr const uint16_t cMaxBuffStringFormat       = 1024;
-    inline const std::string cTTYPath                   = "/dev/pts/37";
-    constexpr const uint8_t cMinCommand                 = 3;
+    constexpr const uint8_t cMinCommand                 = 2;
     constexpr const uint8_t cTimeOutAtServerReadData    = 200;
     inline constexpr std::string_view cCRLF             = "\r\n";
-    inline const std::string cRuleTableFile             = "/home/yrkrus/projects/_code/ndm_test/rules.txt";
 }
 
 #endif // CONFIG_H
