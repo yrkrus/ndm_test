@@ -14,7 +14,18 @@ $(TARGET): $(OBJS)
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-clean:
-	rm -f $(TARGET) $(OBJS)
+# --- Тесты ---
+TEST_TARGET := run_tests
+TEST_SRCS   := tests/test_main.cpp logic/rule_table.cpp common.cpp log.cpp
+TEST_OBJS   := $(TEST_SRCS:.cpp=.o)
 
-.PHONY: all clean
+test: $(TEST_TARGET)
+	@./$(TEST_TARGET)
+
+$(TEST_TARGET): $(TEST_OBJS)
+	$(CXX) $(CXXFLAGS) $(TEST_OBJS) -o $@ $(LDLIBS)
+
+clean:
+	rm -f $(TARGET) $(OBJS) $(TEST_TARGET) $(TEST_OBJS)
+
+.PHONY: all test clean

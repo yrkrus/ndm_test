@@ -20,14 +20,16 @@ class RuleTable
 {
 private:
     std::vector<EntryRule>  m_rules;       
-    static bool ParseRuleEntry(std::string_view _str, EntryRule &_rule, std::string &_errorDescription);
-    static bool Match(std::string_view _pattern, std::string_view _command);
+    
+   
 
 public:
     RuleTable() = default;
     ~RuleTable() = default;
 
     bool LoadFileRule(const std::string &_pathRule, std::string &_errorDescription);
+    static bool Match(std::string_view _pattern, std::string_view _command);
+    static bool ParseRuleEntry(std::string_view _str, EntryRule &_rule, std::string &_errorDescription);
     void Show();
 
     std::string FindAnswer(std::string_view _command) const;       
